@@ -17,6 +17,7 @@
 		C7DA1AEA1CF466B4004C026B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C7DA1AE81CF466B4004C026B /* LaunchScreen.storyboard */; };
 		C7DA1AF21CF4675A004C026B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C7DA1AF11CF4675A004C026B /* GoogleService-Info.plist */; };
 		C7F49AD21CF4697F00DA14AA /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = C7F49AD11CF4697F00DA14AA /* Podfile */; };
+		C7FD163C1CF497BC00B29D51 /* CoreDataStackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7FD163B1CF497BC00B29D51 /* CoreDataStackManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +35,7 @@
 		C7DA1AEB1CF466B4004C026B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C7DA1AF11CF4675A004C026B /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		C7F49AD11CF4697F00DA14AA /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; };
+		C7FD163B1CF497BC00B29D51 /* CoreDataStackManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStackManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,6 +81,7 @@
 		C7DA1AD91CF466B4004C026B /* Propty */ = {
 			isa = PBXGroup;
 			children = (
+				C7FD163B1CF497BC00B29D51 /* CoreDataStackManager.swift */,
 				C7DA1ADA1CF466B4004C026B /* AppDelegate.swift */,
 				C7DA1ADF1CF466B4004C026B /* MasterViewController.swift */,
 				C7DA1AE11CF466B4004C026B /* DetailViewController.swift */,
@@ -228,6 +231,7 @@
 				C7DA1ADB1CF466B4004C026B /* AppDelegate.swift in Sources */,
 				C7DA1ADE1CF466B4004C026B /* Propty.xcdatamodeld in Sources */,
 				C7DA1AE01CF466B4004C026B /* MasterViewController.swift in Sources */,
+				C7FD163C1CF497BC00B29D51 /* CoreDataStackManager.swift in Sources */,
 				C7DA1AE21CF466B4004C026B /* DetailViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
