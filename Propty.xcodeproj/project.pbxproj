@@ -10,8 +10,8 @@
 		3B6925E87043977D316A3107 /* Pods_Propty.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D39A0250EAAAA1276BCD57A /* Pods_Propty.framework */; };
 		C7DA1ADB1CF466B4004C026B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7DA1ADA1CF466B4004C026B /* AppDelegate.swift */; };
 		C7DA1ADE1CF466B4004C026B /* Propty.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C7DA1ADC1CF466B4004C026B /* Propty.xcdatamodeld */; };
-		C7DA1AE01CF466B4004C026B /* MasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7DA1ADF1CF466B4004C026B /* MasterViewController.swift */; };
-		C7DA1AE21CF466B4004C026B /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7DA1AE11CF466B4004C026B /* DetailViewController.swift */; };
+		C7DA1AE01CF466B4004C026B /* PropertyListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7DA1ADF1CF466B4004C026B /* PropertyListViewController.swift */; };
+		C7DA1AE21CF466B4004C026B /* PropertyDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7DA1AE11CF466B4004C026B /* PropertyDetailViewController.swift */; };
 		C7DA1AE51CF466B4004C026B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C7DA1AE31CF466B4004C026B /* Main.storyboard */; };
 		C7DA1AE71CF466B4004C026B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C7DA1AE61CF466B4004C026B /* Assets.xcassets */; };
 		C7DA1AEA1CF466B4004C026B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C7DA1AE81CF466B4004C026B /* LaunchScreen.storyboard */; };
@@ -27,8 +27,8 @@
 		C7DA1AD71CF466B4004C026B /* Propty.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Propty.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C7DA1ADA1CF466B4004C026B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C7DA1ADD1CF466B4004C026B /* Propty.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Propty.xcdatamodel; sourceTree = "<group>"; };
-		C7DA1ADF1CF466B4004C026B /* MasterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterViewController.swift; sourceTree = "<group>"; };
-		C7DA1AE11CF466B4004C026B /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
+		C7DA1ADF1CF466B4004C026B /* PropertyListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PropertyListViewController.swift; sourceTree = "<group>"; };
+		C7DA1AE11CF466B4004C026B /* PropertyDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PropertyDetailViewController.swift; sourceTree = "<group>"; };
 		C7DA1AE41CF466B4004C026B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		C7DA1AE61CF466B4004C026B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C7DA1AE91CF466B4004C026B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -81,10 +81,10 @@
 		C7DA1AD91CF466B4004C026B /* Propty */ = {
 			isa = PBXGroup;
 			children = (
-				C7FD163B1CF497BC00B29D51 /* CoreDataStackManager.swift */,
 				C7DA1ADA1CF466B4004C026B /* AppDelegate.swift */,
-				C7DA1ADF1CF466B4004C026B /* MasterViewController.swift */,
-				C7DA1AE11CF466B4004C026B /* DetailViewController.swift */,
+				C7FD163B1CF497BC00B29D51 /* CoreDataStackManager.swift */,
+				C7DA1ADF1CF466B4004C026B /* PropertyListViewController.swift */,
+				C7DA1AE11CF466B4004C026B /* PropertyDetailViewController.swift */,
 				C7DA1AE31CF466B4004C026B /* Main.storyboard */,
 				C7DA1AE61CF466B4004C026B /* Assets.xcassets */,
 				C7DA1AE81CF466B4004C026B /* LaunchScreen.storyboard */,
@@ -230,9 +230,9 @@
 			files = (
 				C7DA1ADB1CF466B4004C026B /* AppDelegate.swift in Sources */,
 				C7DA1ADE1CF466B4004C026B /* Propty.xcdatamodeld in Sources */,
-				C7DA1AE01CF466B4004C026B /* MasterViewController.swift in Sources */,
+				C7DA1AE01CF466B4004C026B /* PropertyListViewController.swift in Sources */,
 				C7FD163C1CF497BC00B29D51 /* CoreDataStackManager.swift in Sources */,
-				C7DA1AE21CF466B4004C026B /* DetailViewController.swift in Sources */,
+				C7DA1AE21CF466B4004C026B /* PropertyDetailViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
