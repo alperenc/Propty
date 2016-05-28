@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		3B6925E87043977D316A3107 /* Pods_Propty.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D39A0250EAAAA1276BCD57A /* Pods_Propty.framework */; };
+		C73BFD731CF9CBAC0087C435 /* FoursquareClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = C73BFD721CF9CBAC0087C435 /* FoursquareClient.swift */; };
+		C73BFD761CF9CC410087C435 /* FoursquareConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = C73BFD751CF9CC410087C435 /* FoursquareConstants.swift */; };
+		C73BFD781CF9CD610087C435 /* ClientKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = C73BFD771CF9CD610087C435 /* ClientKeys.swift */; };
 		C7DA1ADB1CF466B4004C026B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7DA1ADA1CF466B4004C026B /* AppDelegate.swift */; };
 		C7DA1ADE1CF466B4004C026B /* Propty.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C7DA1ADC1CF466B4004C026B /* Propty.xcdatamodeld */; };
 		C7DA1AE01CF466B4004C026B /* PropertyListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7DA1ADF1CF466B4004C026B /* PropertyListViewController.swift */; };
@@ -24,6 +27,9 @@
 		62273DD3A36B3624681C12FB /* Pods-Propty.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Propty.release.xcconfig"; path = "Pods/Target Support Files/Pods-Propty/Pods-Propty.release.xcconfig"; sourceTree = "<group>"; };
 		7B5630EBB6C7AE04DF453A10 /* Pods-Propty.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Propty.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Propty/Pods-Propty.debug.xcconfig"; sourceTree = "<group>"; };
 		9D39A0250EAAAA1276BCD57A /* Pods_Propty.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Propty.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C73BFD721CF9CBAC0087C435 /* FoursquareClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FoursquareClient.swift; sourceTree = "<group>"; };
+		C73BFD751CF9CC410087C435 /* FoursquareConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FoursquareConstants.swift; sourceTree = "<group>"; };
+		C73BFD771CF9CD610087C435 /* ClientKeys.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClientKeys.swift; sourceTree = "<group>"; };
 		C7DA1AD71CF466B4004C026B /* Propty.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Propty.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C7DA1ADA1CF466B4004C026B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C7DA1ADD1CF466B4004C026B /* Propty.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Propty.xcdatamodel; sourceTree = "<group>"; };
@@ -59,6 +65,34 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		C73BFD701CF9CB5A0087C435 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				C7FD163B1CF497BC00B29D51 /* CoreDataStackManager.swift */,
+				C7DA1ADC1CF466B4004C026B /* Propty.xcdatamodeld */,
+				C73BFD741CF9CBB10087C435 /* Clients */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		C73BFD711CF9CB650087C435 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				C7DA1ADF1CF466B4004C026B /* PropertyListViewController.swift */,
+				C7DA1AE11CF466B4004C026B /* PropertyDetailViewController.swift */,
+			);
+			name = Controller;
+			sourceTree = "<group>";
+		};
+		C73BFD741CF9CBB10087C435 /* Clients */ = {
+			isa = PBXGroup;
+			children = (
+				C73BFD721CF9CBAC0087C435 /* FoursquareClient.swift */,
+				C73BFD751CF9CC410087C435 /* FoursquareConstants.swift */,
+			);
+			name = Clients;
+			sourceTree = "<group>";
+		};
 		C7DA1ACE1CF466B4004C026B = {
 			isa = PBXGroup;
 			children = (
@@ -82,15 +116,14 @@
 			isa = PBXGroup;
 			children = (
 				C7DA1ADA1CF466B4004C026B /* AppDelegate.swift */,
-				C7FD163B1CF497BC00B29D51 /* CoreDataStackManager.swift */,
-				C7DA1ADF1CF466B4004C026B /* PropertyListViewController.swift */,
-				C7DA1AE11CF466B4004C026B /* PropertyDetailViewController.swift */,
+				C73BFD701CF9CB5A0087C435 /* Model */,
+				C73BFD711CF9CB650087C435 /* Controller */,
 				C7DA1AE31CF466B4004C026B /* Main.storyboard */,
 				C7DA1AE61CF466B4004C026B /* Assets.xcassets */,
 				C7DA1AE81CF466B4004C026B /* LaunchScreen.storyboard */,
 				C7DA1AEB1CF466B4004C026B /* Info.plist */,
 				C7DA1AF11CF4675A004C026B /* GoogleService-Info.plist */,
-				C7DA1ADC1CF466B4004C026B /* Propty.xcdatamodeld */,
+				C73BFD771CF9CD610087C435 /* ClientKeys.swift */,
 			);
 			path = Propty;
 			sourceTree = "<group>";
@@ -233,6 +266,9 @@
 				C7DA1AE01CF466B4004C026B /* PropertyListViewController.swift in Sources */,
 				C7FD163C1CF497BC00B29D51 /* CoreDataStackManager.swift in Sources */,
 				C7DA1AE21CF466B4004C026B /* PropertyDetailViewController.swift in Sources */,
+				C73BFD731CF9CBAC0087C435 /* FoursquareClient.swift in Sources */,
+				C73BFD781CF9CD610087C435 /* ClientKeys.swift in Sources */,
+				C73BFD761CF9CC410087C435 /* FoursquareConstants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

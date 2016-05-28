@@ -124,3 +124,6 @@ fastlane/test_output
 
 ### Firebase ###
 Propty/GoogleService-Info.plist
+
+### Client Keys ###
+Propty/ClientKeys.swift
