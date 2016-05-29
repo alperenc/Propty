@@ -32,14 +32,14 @@ class PropertyListViewController: UITableViewController, NSFetchedResultsControl
         
         locationManager.delegate = self
         
-        /*do {
+        do {
             try fetchedResultsController.performFetch()
         } catch {
             // TODO: Replace this implementation with suitable code to handle the error appropriately.
             // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
             //print("Unresolved error \(error), \(error.userInfo)")
-            //abort()
-        }*/
+            abort()
+        }
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -154,14 +154,14 @@ class PropertyListViewController: UITableViewController, NSFetchedResultsControl
         let fetchRequest = NSFetchRequest(entityName: "Property")
         
         // Sort by status and distance
-        let statusSort = NSSortDescriptor(key: "status", ascending: true)
+        let savedSort = NSSortDescriptor(key: "saved", ascending: true)
         let distanceSort = NSSortDescriptor(key: "distance", ascending: true)
-        fetchRequest.sortDescriptors = [statusSort, distanceSort]
+        fetchRequest.sortDescriptors = [savedSort, distanceSort]
         
         // Create the Fetched Results Controller
         let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
                                                                   managedObjectContext: self.sharedContext,
-                                                                  sectionNameKeyPath: nil,
+                                                                  sectionNameKeyPath: "saved",
                                                                   cacheName: nil)
         // Set the delegate
         fetchedResultsController.delegate = self

@@ -14,13 +14,14 @@ import CoreData
 
 extension Property {
 
-    @NSManaged var id: String?
-    @NSManaged var name: String?
-    @NSManaged var latitude: Double
-    @NSManaged var longitude: Double
-    @NSManaged var distance: Int32
     @NSManaged var address: String?
     @NSManaged var city: String?
+    @NSManaged var distance: Int32
+    @NSManaged var id: String
+    @NSManaged var latitude: Double
+    @NSManaged var longitude: Double
+    @NSManaged var name: String
+    @NSManaged var saved: Bool
     @NSManaged var tips: [Tip]?
 
 }
