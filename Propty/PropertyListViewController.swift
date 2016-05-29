@@ -8,11 +8,17 @@
 
 import UIKit
 import CoreData
+import CoreLocation
 
-class PropertyListViewController: UITableViewController, NSFetchedResultsControllerDelegate {
+class PropertyListViewController: UITableViewController, NSFetchedResultsControllerDelegate, CLLocationManagerDelegate {
+    
+    // MARK: - Properties
 
     var detailViewController: PropertyDetailViewController? = nil
-
+    
+    let locationManager = CLLocationManager()
+    
+    // MARK: - Life Cycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,19 +30,63 @@ class PropertyListViewController: UITableViewController, NSFetchedResultsControl
             self.detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? PropertyDetailViewController
         }
         
-        do {
+        locationManager.delegate = self
+        
+        /*do {
             try fetchedResultsController.performFetch()
         } catch {
-            // TODO: Replace this implementation with code to handle the error appropriately.
+            // TODO: Replace this implementation with suitable code to handle the error appropriately.
             // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
             //print("Unresolved error \(error), \(error.userInfo)")
-            abort()
-        }
+            //abort()
+        }*/
     }
 
     override func viewWillAppear(animated: Bool) {
         self.clearsSelectionOnViewWillAppear = self.splitViewController!.collapsed
         super.viewWillAppear(animated)
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        // Begin: Parts of this code snippet is taken from NSHipster
+        switch CLLocationManager.authorizationStatus() {
+        case .AuthorizedAlways, .AuthorizedWhenInUse:
+            locationManager.startUpdatingLocation()
+        case .NotDetermined:
+            let alertController = UIAlertController(
+                title: "Enable Location Access",
+                message: "In order to show properties near you, Propty needs access to your device location.",
+                preferredStyle: .Alert)
+            
+            let denyAction = UIAlertAction(title: "Deny", style: .Cancel, handler: nil)
+            alertController.addAction(denyAction)
+            
+            let okAction = UIAlertAction(title: "OK", style: .Default) { (action) in
+                self.locationManager.requestWhenInUseAuthorization()
+            }
+            alertController.addAction(okAction)
+            
+            self.presentViewController(alertController, animated: true, completion: nil)
+            
+        case .Restricted, .Denied:
+            let alertController = UIAlertController(
+                title: "Location Access Disabled",
+                message: "In order to see properties near you, please open this app's settings and set location access to 'While Using the App' or 'Always'.",
+                preferredStyle: .Alert)
+            
+            let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
+            alertController.addAction(cancelAction)
+            
+            let openAction = UIAlertAction(title: "Open Settings", style: .Default) { (action) in
+                if let url = NSURL(string:UIApplicationOpenSettingsURLString) {
+                    UIApplication.sharedApplication().openURL(url)
+                }
+            }
+            alertController.addAction(openAction)
+            
+            self.presentViewController(alertController, animated: true, completion: nil)
+        }
+        // End: Parts of this code snippet is taken from NSHipster
     }
 
     // MARK: - Segues
@@ -78,7 +128,7 @@ class PropertyListViewController: UITableViewController, NSFetchedResultsControl
 
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if editingStyle == .Delete {
-            let property = self.fetchedResultsController.objectAtIndexPath(indexPath) as! NSManagedObject // TODO: Change to Property, once created.
+            let property = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Property
             
             sharedContext.deleteObject(property)
             
@@ -96,7 +146,7 @@ class PropertyListViewController: UITableViewController, NSFetchedResultsControl
         return CoreDataStackManager.sharedInstance().managedObjectContext
     }
 
-    // MARK: - Fetched results controller
+    // MARK: - Fetched Results Controller
 
     lazy var fetchedResultsController: NSFetchedResultsController = {
         
@@ -160,6 +210,16 @@ class PropertyListViewController: UITableViewController, NSFetchedResultsControl
          self.tableView.reloadData()
      }
      */
+    
+    // MARK: - Core Location
+    
+    func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
+        locationManager.startUpdatingLocation()
+    }
+    
+    func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        // TODO: Fetch properties nearby with updated location
+    }
 
 }
 
