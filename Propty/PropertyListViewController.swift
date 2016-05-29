@@ -52,39 +52,27 @@ class PropertyListViewController: UITableViewController, NSFetchedResultsControl
         switch CLLocationManager.authorizationStatus() {
         case .AuthorizedAlways, .AuthorizedWhenInUse:
             locationManager.startUpdatingLocation()
+            
         case .NotDetermined:
             let alertController = UIAlertController(
                 title: "Enable Location Access",
                 message: "In order to show properties near you, Propty needs access to your device location.",
                 preferredStyle: .Alert)
             
-            let denyAction = UIAlertAction(title: "Deny", style: .Cancel, handler: nil)
+            let denyAction = UIAlertAction(title: "Deny", style: .Cancel) { (action) in
+                self.showLocationDisabledAlert()
+            }
             alertController.addAction(denyAction)
             
-            let okAction = UIAlertAction(title: "OK", style: .Default) { (action) in
+            let allowAction = UIAlertAction(title: "Allow", style: .Default) { (action) in
                 self.locationManager.requestWhenInUseAuthorization()
             }
-            alertController.addAction(okAction)
+            alertController.addAction(allowAction)
             
             self.presentViewController(alertController, animated: true, completion: nil)
             
         case .Restricted, .Denied:
-            let alertController = UIAlertController(
-                title: "Location Access Disabled",
-                message: "In order to see properties near you, please open this app's settings and set location access to 'While Using the App' or 'Always'.",
-                preferredStyle: .Alert)
-            
-            let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
-            alertController.addAction(cancelAction)
-            
-            let openAction = UIAlertAction(title: "Open Settings", style: .Default) { (action) in
-                if let url = NSURL(string:UIApplicationOpenSettingsURLString) {
-                    UIApplication.sharedApplication().openURL(url)
-                }
-            }
-            alertController.addAction(openAction)
-            
-            self.presentViewController(alertController, animated: true, completion: nil)
+            showLocationDisabledAlert()
         }
         // End: Parts of this code snippet is taken from NSHipster
     }
@@ -101,6 +89,26 @@ class PropertyListViewController: UITableViewController, NSFetchedResultsControl
                 controller.navigationItem.leftItemsSupplementBackButton = true
             }
         }
+    }
+    
+    // MARK: - Actions and Helpers
+    func showLocationDisabledAlert() {
+        let alertController = UIAlertController(
+            title: "Location Access Disabled",
+            message: "In order to see properties near you, please open this app's settings and set location access to 'While Using the App' or 'Always'.",
+            preferredStyle: .Alert)
+        
+        let openAction = UIAlertAction(title: "Open Settings", style: .Default) { (action) in
+            if let url = NSURL(string:UIApplicationOpenSettingsURLString) {
+                dispatch_async(dispatch_get_main_queue()) {
+                    UIApplication.sharedApplication().openURL(url)
+                }
+            }
+        }
+        alertController.addAction(openAction)
+        
+        self.presentViewController(alertController, animated: true, completion: nil)
+
     }
 
     // MARK: - Table View

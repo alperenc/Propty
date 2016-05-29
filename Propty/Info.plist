@@ -28,6 +28,8 @@
 	<string>Main</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>In order to show properties near you, Propty needs access to your device location.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>In order to show properties near you, Propty needs access to your device location.</string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>
