@@ -55,15 +55,16 @@ extension FoursquareClient {
         static let Venues = "venues"
         
         // Venue
-        static let ID = "id"
-        static let Name = "name"
-        static let Location = "location"
+        static let VenueID = "id"
+        static let VenueName = "name"
+        static let VenueLocation = "location"
         
         // Location
-        static let Lat = "lat"
-        static let Long = "lng"
-        static let Distance = "distance"
-        static let FormattedAddress = "formattedAddress"
+        static let VenueLat = "lat"
+        static let VenueLong = "lng"
+        static let VenueDistance = "distance"
+        static let VenueAddress = "address"
+        static let VenueCity = "city"
         
     }
 }

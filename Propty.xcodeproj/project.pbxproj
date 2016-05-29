@@ -12,6 +12,10 @@
 		C73BFD761CF9CC410087C435 /* FoursquareConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = C73BFD751CF9CC410087C435 /* FoursquareConstants.swift */; };
 		C73BFD781CF9CD610087C435 /* ClientKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = C73BFD771CF9CD610087C435 /* ClientKeys.swift */; };
 		C73BFD7A1CF9E6DC0087C435 /* FoursquareConvenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = C73BFD791CF9E6DC0087C435 /* FoursquareConvenience.swift */; };
+		C73BFD7F1CFB08FF0087C435 /* Tip+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = C73BFD7B1CFB08FF0087C435 /* Tip+CoreDataProperties.swift */; };
+		C73BFD801CFB08FF0087C435 /* Tip.swift in Sources */ = {isa = PBXBuildFile; fileRef = C73BFD7C1CFB08FF0087C435 /* Tip.swift */; };
+		C73BFD811CFB08FF0087C435 /* Property+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = C73BFD7D1CFB08FF0087C435 /* Property+CoreDataProperties.swift */; };
+		C73BFD821CFB08FF0087C435 /* Property.swift in Sources */ = {isa = PBXBuildFile; fileRef = C73BFD7E1CFB08FF0087C435 /* Property.swift */; };
 		C7DA1ADB1CF466B4004C026B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7DA1ADA1CF466B4004C026B /* AppDelegate.swift */; };
 		C7DA1ADE1CF466B4004C026B /* Propty.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C7DA1ADC1CF466B4004C026B /* Propty.xcdatamodeld */; };
 		C7DA1AE01CF466B4004C026B /* PropertyListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7DA1ADF1CF466B4004C026B /* PropertyListViewController.swift */; };
@@ -32,6 +36,10 @@
 		C73BFD751CF9CC410087C435 /* FoursquareConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FoursquareConstants.swift; sourceTree = "<group>"; };
 		C73BFD771CF9CD610087C435 /* ClientKeys.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClientKeys.swift; sourceTree = "<group>"; };
 		C73BFD791CF9E6DC0087C435 /* FoursquareConvenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FoursquareConvenience.swift; sourceTree = "<group>"; };
+		C73BFD7B1CFB08FF0087C435 /* Tip+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Tip+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		C73BFD7C1CFB08FF0087C435 /* Tip.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tip.swift; sourceTree = "<group>"; };
+		C73BFD7D1CFB08FF0087C435 /* Property+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Property+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		C73BFD7E1CFB08FF0087C435 /* Property.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Property.swift; sourceTree = "<group>"; };
 		C7DA1AD71CF466B4004C026B /* Propty.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Propty.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C7DA1ADA1CF466B4004C026B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C7DA1ADD1CF466B4004C026B /* Propty.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Propty.xcdatamodel; sourceTree = "<group>"; };
@@ -70,6 +78,10 @@
 		C73BFD701CF9CB5A0087C435 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				C73BFD7B1CFB08FF0087C435 /* Tip+CoreDataProperties.swift */,
+				C73BFD7C1CFB08FF0087C435 /* Tip.swift */,
+				C73BFD7D1CFB08FF0087C435 /* Property+CoreDataProperties.swift */,
+				C73BFD7E1CFB08FF0087C435 /* Property.swift */,
 				C7FD163B1CF497BC00B29D51 /* CoreDataStackManager.swift */,
 				C7DA1ADC1CF466B4004C026B /* Propty.xcdatamodeld */,
 				C73BFD741CF9CBB10087C435 /* Clients */,
@@ -265,11 +277,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				C7DA1ADB1CF466B4004C026B /* AppDelegate.swift in Sources */,
+				C73BFD801CFB08FF0087C435 /* Tip.swift in Sources */,
+				C73BFD7F1CFB08FF0087C435 /* Tip+CoreDataProperties.swift in Sources */,
 				C7DA1ADE1CF466B4004C026B /* Propty.xcdatamodeld in Sources */,
 				C7DA1AE01CF466B4004C026B /* PropertyListViewController.swift in Sources */,
 				C7FD163C1CF497BC00B29D51 /* CoreDataStackManager.swift in Sources */,
+				C73BFD821CFB08FF0087C435 /* Property.swift in Sources */,
 				C7DA1AE21CF466B4004C026B /* PropertyDetailViewController.swift in Sources */,
 				C73BFD731CF9CBAC0087C435 /* FoursquareClient.swift in Sources */,
+				C73BFD811CFB08FF0087C435 /* Property+CoreDataProperties.swift in Sources */,
 				C73BFD7A1CF9E6DC0087C435 /* FoursquareConvenience.swift in Sources */,
 				C73BFD781CF9CD610087C435 /* ClientKeys.swift in Sources */,
 				C73BFD761CF9CC410087C435 /* FoursquareConstants.swift in Sources */,
