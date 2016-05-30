@@ -227,6 +227,17 @@ class PropertyListViewController: UITableViewController, NSFetchedResultsControl
     
     func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         // TODO: Fetch properties nearby with updated location
+        guard let currentLocation = locations.last else {
+            return
+        }
+        
+        FoursquareClient.sharedInstance().getVenuesForLocation(currentLocation) { (success, error) in
+            if success {
+                dispatch_async(dispatch_get_main_queue()) {
+                    self.tableView.reloadData()
+                }
+            }
+        }
     }
 
 }

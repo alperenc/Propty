@@ -11,11 +11,11 @@ import CoreLocation
 
 extension FoursquareClient {
     
-    func getVenuesForLocation(location: CLLocationCoordinate2D, completion:(success: Bool, error: NSError?) -> Void) {
+    func getVenuesForLocation(location: CLLocation, completion:(success: Bool, error: NSError?) -> Void) {
         
         // Specify parameters
         let parameters = [
-            ParameterKeys.LatLong: "\(location.latitude),\(location.longitude)",
+            ParameterKeys.LatLong: "\(location.coordinate.latitude),\(location.coordinate.longitude)",
             ParameterKeys.CategoryID: Constants.CategoryID]
         
         // Make the request
@@ -43,8 +43,12 @@ extension FoursquareClient {
                 completion(success: false, error: NSError(domain: "noVenues", code: 02, userInfo: userInfo))
             } else {
                 for venueDictionary in venuesArray {
-                    
+                    let _ = Property(dictionary: venueDictionary, context: CoreDataStackManager.sharedInstance().managedObjectContext)
                 }
+                
+                CoreDataStackManager.sharedInstance().saveContext()
+                
+                completion(success: true, error: nil)
             }
             
         }
