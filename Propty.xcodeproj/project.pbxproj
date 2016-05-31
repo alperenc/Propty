@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		3B6925E87043977D316A3107 /* Pods_Propty.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D39A0250EAAAA1276BCD57A /* Pods_Propty.framework */; };
+		C714BD641CFE359900127023 /* PropertyTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C714BD631CFE359900127023 /* PropertyTableViewCell.swift */; };
 		C73BFD731CF9CBAC0087C435 /* FoursquareClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = C73BFD721CF9CBAC0087C435 /* FoursquareClient.swift */; };
 		C73BFD761CF9CC410087C435 /* FoursquareConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = C73BFD751CF9CC410087C435 /* FoursquareConstants.swift */; };
 		C73BFD781CF9CD610087C435 /* ClientKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = C73BFD771CF9CD610087C435 /* ClientKeys.swift */; };
@@ -32,6 +33,7 @@
 		62273DD3A36B3624681C12FB /* Pods-Propty.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Propty.release.xcconfig"; path = "Pods/Target Support Files/Pods-Propty/Pods-Propty.release.xcconfig"; sourceTree = "<group>"; };
 		7B5630EBB6C7AE04DF453A10 /* Pods-Propty.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Propty.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Propty/Pods-Propty.debug.xcconfig"; sourceTree = "<group>"; };
 		9D39A0250EAAAA1276BCD57A /* Pods_Propty.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Propty.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C714BD631CFE359900127023 /* PropertyTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PropertyTableViewCell.swift; sourceTree = "<group>"; };
 		C73BFD721CF9CBAC0087C435 /* FoursquareClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FoursquareClient.swift; sourceTree = "<group>"; };
 		C73BFD751CF9CC410087C435 /* FoursquareConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FoursquareConstants.swift; sourceTree = "<group>"; };
 		C73BFD771CF9CD610087C435 /* ClientKeys.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClientKeys.swift; sourceTree = "<group>"; };
@@ -73,6 +75,14 @@
 				62273DD3A36B3624681C12FB /* Pods-Propty.release.xcconfig */,
 			);
 			name = Pods;
+			sourceTree = "<group>";
+		};
+		C714BD651CFE35A000127023 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				C714BD631CFE359900127023 /* PropertyTableViewCell.swift */,
+			);
+			name = View;
 			sourceTree = "<group>";
 		};
 		C73BFD701CF9CB5A0087C435 /* Model */ = {
@@ -133,6 +143,7 @@
 				C7DA1ADA1CF466B4004C026B /* AppDelegate.swift */,
 				C73BFD701CF9CB5A0087C435 /* Model */,
 				C73BFD711CF9CB650087C435 /* Controller */,
+				C714BD651CFE35A000127023 /* View */,
 				C7DA1AE31CF466B4004C026B /* Main.storyboard */,
 				C7DA1AE61CF466B4004C026B /* Assets.xcassets */,
 				C7DA1AE81CF466B4004C026B /* LaunchScreen.storyboard */,
@@ -276,6 +287,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C714BD641CFE359900127023 /* PropertyTableViewCell.swift in Sources */,
 				C7DA1ADB1CF466B4004C026B /* AppDelegate.swift in Sources */,
 				C73BFD801CFB08FF0087C435 /* Tip.swift in Sources */,
 				C73BFD7F1CFB08FF0087C435 /* Tip+CoreDataProperties.swift in Sources */,

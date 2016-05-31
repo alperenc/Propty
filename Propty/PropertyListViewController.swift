@@ -123,9 +123,9 @@ class PropertyListViewController: UITableViewController, NSFetchedResultsControl
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath)
-        let object = self.fetchedResultsController.objectAtIndexPath(indexPath) as! NSManagedObject
-        self.configureCell(cell, withObject: object)
+        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as! PropertyTableViewCell
+        let property = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Property
+        self.configureCell(cell, withProperty: property)
         return cell
     }
 
@@ -144,8 +144,8 @@ class PropertyListViewController: UITableViewController, NSFetchedResultsControl
         }
     }
 
-    func configureCell(cell: UITableViewCell, withObject object: NSManagedObject) {
-        cell.textLabel!.text = object.valueForKey("timeStamp")!.description
+    func configureCell(cell: PropertyTableViewCell, withProperty property: Property) {
+        cell.textLabel!.text = property.name
     }
     
     // MARK: - Core Data Convenience
@@ -200,7 +200,8 @@ class PropertyListViewController: UITableViewController, NSFetchedResultsControl
             case .Delete:
                 tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
             case .Update:
-                self.configureCell(tableView.cellForRowAtIndexPath(indexPath!)!, withObject: anObject as! NSManagedObject)
+                let cell = tableView.cellForRowAtIndexPath(indexPath!) as! PropertyTableViewCell
+                self.configureCell(cell, withProperty: anObject as! Property)
             case .Move:
                 tableView.moveRowAtIndexPath(indexPath!, toIndexPath: newIndexPath!)
         }
