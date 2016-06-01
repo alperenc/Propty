@@ -16,7 +16,9 @@ extension FoursquareClient {
         // Specify parameters
         let parameters = [
             ParameterKeys.LatLong: "\(location.coordinate.latitude),\(location.coordinate.longitude)",
-            ParameterKeys.CategoryID: Constants.CategoryID]
+            ParameterKeys.CategoryID: Constants.CategoryID,
+            ParameterKeys.Intent: Constants.Intent,
+            ParameterKeys.Radius: Constants.Radius]
         
         // Make the request
         taskForGETMethod(Methods.Search, parameters: parameters) { (JSONResult, error) in

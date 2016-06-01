@@ -51,7 +51,7 @@ class PropertyListViewController: UITableViewController, NSFetchedResultsControl
         // Begin: Parts of this code snippet is taken from NSHipster
         switch CLLocationManager.authorizationStatus() {
         case .AuthorizedAlways, .AuthorizedWhenInUse:
-            locationManager.startUpdatingLocation()
+            locationManager.startUpdatingLocation() //requestLocation()
             
         case .NotDetermined:
             let alertController = UIAlertController(
@@ -123,7 +123,7 @@ class PropertyListViewController: UITableViewController, NSFetchedResultsControl
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as! PropertyTableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("propertyCell", forIndexPath: indexPath) as! PropertyTableViewCell
         let property = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Property
         self.configureCell(cell, withProperty: property)
         return cell
@@ -223,7 +223,7 @@ class PropertyListViewController: UITableViewController, NSFetchedResultsControl
     // MARK: - Core Location
     
     func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
-        locationManager.startUpdatingLocation()
+        locationManager.startUpdatingLocation() //requestLocation()
     }
     
     func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
@@ -232,11 +232,10 @@ class PropertyListViewController: UITableViewController, NSFetchedResultsControl
             return
         }
         
+        locationManager.stopUpdatingLocation()
+        
         FoursquareClient.sharedInstance().getVenuesForLocation(currentLocation) { (success, error) in
             if success {
-                dispatch_async(dispatch_get_main_queue()) {
-                    self.tableView.reloadData()
-                }
             }
         }
     }

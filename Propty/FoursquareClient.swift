@@ -41,9 +41,11 @@ class FoursquareClient: NSObject {
         // Add in Client ID & Secret
         mutableParameters[ParameterKeys.ClientID] = Constants.ClientID
         mutableParameters[ParameterKeys.ClientSecret] = Constants.ClientSecret
+        mutableParameters[ParameterKeys.Version] = Constants.Version
+        mutableParameters[ParameterKeys.Mode] = Constants.Foursquare
         
         // Build the URL and configure the request
-        let urlString = Constants.BaseURL + method + FoursquareClient.escapedParameters(parameters)
+        let urlString = Constants.BaseURL + method + FoursquareClient.escapedParameters(mutableParameters)
         let url = NSURL(string: urlString)!
         let request = NSURLRequest(URL: url)
         
@@ -116,7 +118,7 @@ class FoursquareClient: NSObject {
     }
     
     // Helper function: Given a dictionary of parameters, convert to a string for a url
-    class func escapedParameters(parameters: [String : AnyObject]) -> String {
+    class func escapedParameters(parameters: [String: AnyObject]) -> String {
         
         var urlVars = [String]()
         

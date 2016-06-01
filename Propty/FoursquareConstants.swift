@@ -23,7 +23,11 @@ extension FoursquareClient {
         // MARK: Parameter Constants
         static let CategoryID = "4e67e38e036454776db1fb3a"
         static let Intent = "browse"
-        static let Radius = 1000
+        static let Radius = "1000"
+        
+        // MARK: Required Versioning Parameter Constants
+        static let Version = "20140806"
+        static let Foursquare = "foursquare"
     }
     
     // MARK: Methods
@@ -33,15 +37,20 @@ extension FoursquareClient {
         static let Search = "venues/search"
     }
     
-    // MARK: Parameter Keys
+    
     struct ParameterKeys {
         
+        // MARK: Parameter Keys
         static let ClientID = "client_id"
         static let ClientSecret = "client_secret"
         static let LatLong = "ll"
-        static let CategoryID = "category_id"
+        static let CategoryID = "categoryId"
         static let Intent = "intent"
         static let Radius = "radius"
+        
+        // MARK: Required Versioning Parametere Keys
+        static let Version = "v"
+        static let Mode = "m"
         
     }
     
