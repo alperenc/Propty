@@ -9,8 +9,9 @@
 import UIKit
 import CoreData
 import CoreLocation
+import SWTableViewCell
 
-class PropertyListViewController: UITableViewController, NSFetchedResultsControllerDelegate, CLLocationManagerDelegate {
+class PropertyListViewController: UITableViewController, NSFetchedResultsControllerDelegate, CLLocationManagerDelegate, SWTableViewCellDelegate {
     
     // MARK: - Properties
 
@@ -32,7 +33,6 @@ class PropertyListViewController: UITableViewController, NSFetchedResultsControl
         
         refreshControl?.addTarget(self, action: #selector(PropertyListViewController.refresh), forControlEvents: .ValueChanged)
         
-        locationManager.distanceFilter = 100
         locationManager.delegate = self
         
         do {
@@ -101,6 +101,7 @@ class PropertyListViewController: UITableViewController, NSFetchedResultsControl
                 preferredStyle: .Alert)
             
             let denyAction = UIAlertAction(title: "Deny", style: .Cancel) { (action) in
+                // TODO: Show "Location Needed" alert instead of this.
                 self.showLocationDisabledAlert()
             }
             alertController.addAction(denyAction)
@@ -121,8 +122,20 @@ class PropertyListViewController: UITableViewController, NSFetchedResultsControl
     func refresh() {
         fetchLocation()
     }
+    
+    func leftUtilityButtons() -> [AnyObject] {
+        let leftUtilityButtons = NSMutableArray()
+        leftUtilityButtons.sw_addUtilityButtonWithColor(UIColor.blueColor(), title: "Save")
+        
+        return leftUtilityButtons as [AnyObject]
+    }
+    
+    func saveProperty(property: Property) {
+        property.saved = true
+        tableView.reloadData()
+    }
 
-    // MARK: - Table View
+    // MARK: - Table View Data Source
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return self.fetchedResultsController.sections?.count ?? 0
@@ -135,6 +148,9 @@ class PropertyListViewController: UITableViewController, NSFetchedResultsControl
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("propertyCell", forIndexPath: indexPath) as! PropertyTableViewCell
+        cell.leftUtilityButtons = leftUtilityButtons()
+        cell.delegate = self
+        
         let property = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Property
         self.configureCell(cell, withProperty: property)
         return cell
@@ -159,6 +175,19 @@ class PropertyListViewController: UITableViewController, NSFetchedResultsControl
         cell.textLabel!.text = property.name
     }
     
+    // MARK: - Table View Delegate
+    override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        if fetchedResultsController.sections?.count > 1 {
+            if section == 0 {
+                return "Saved Properties"
+            } else {
+                return "Properties provided by foursquare"
+            }
+        } else {
+            return "Properties provided by foursquare"
+        }
+    }
+    
     // MARK: - Core Data Convenience
     
     var sharedContext: NSManagedObjectContext {
@@ -173,7 +202,7 @@ class PropertyListViewController: UITableViewController, NSFetchedResultsControl
         let fetchRequest = NSFetchRequest(entityName: "Property")
         
         // Sort by status and distance
-        let savedSort = NSSortDescriptor(key: "saved", ascending: true)
+        let savedSort = NSSortDescriptor(key: "saved", ascending: false)
         let distanceSort = NSSortDescriptor(key: "distance", ascending: true)
         fetchRequest.sortDescriptors = [savedSort, distanceSort]
         
@@ -214,7 +243,9 @@ class PropertyListViewController: UITableViewController, NSFetchedResultsControl
                 let cell = tableView.cellForRowAtIndexPath(indexPath!) as! PropertyTableViewCell
                 self.configureCell(cell, withProperty: anObject as! Property)
             case .Move:
-                tableView.moveRowAtIndexPath(indexPath!, toIndexPath: newIndexPath!)
+                tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
+                tableView.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .Fade)
+                // tableView.moveRowAtIndexPath(indexPath!, toIndexPath: newIndexPath!)
         }
     }
 
@@ -234,17 +265,24 @@ class PropertyListViewController: UITableViewController, NSFetchedResultsControl
     // MARK: - Core Location
     
     func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
-        locationManager.startUpdatingLocation() //requestLocation()
+        locationManager.startUpdatingLocation()
     }
     
     func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        // TODO: Fetch properties nearby with updated location
         guard let currentLocation = locations.last else {
             return
         }
         
-        refreshControl?.endRefreshing()
+        print(-currentLocation.timestamp.timeIntervalSinceNow)
+        
+        if (-currentLocation.timestamp.timeIntervalSinceNow) < 120 {
+            locationManager.stopUpdatingLocation()
+            refreshControl?.endRefreshing()
+            return
+        }
+        
         locationManager.stopUpdatingLocation()
+        refreshControl?.endRefreshing()
         
         for property in fetchedResultsController.fetchedObjects as! [Property] {
             if !property.saved {
@@ -269,6 +307,18 @@ class PropertyListViewController: UITableViewController, NSFetchedResultsControl
         alertController.addAction(dismissAction)
         
         self.presentViewController(alertController, animated: true, completion: nil)
+    }
+    
+    // MARK: SWTableViewCellDelegate
+    func swipeableTableViewCell(cell: SWTableViewCell!, didTriggerLeftUtilityButtonWithIndex index: Int) {
+        switch index {
+        case 0:
+            let indexPath = tableView.indexPathForCell(cell)!
+            let property = fetchedResultsController.objectAtIndexPath(indexPath) as! Property
+            saveProperty(property)
+        default:
+            break
+        }
     }
 
 }

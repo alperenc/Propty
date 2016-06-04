@@ -6,9 +6,9 @@
 //  Copyright © 2016 Alp Eren Can. All rights reserved.
 //
 
-import UIKit
+import SWTableViewCell
 
-class PropertyTableViewCell: UITableViewCell {
+class PropertyTableViewCell: SWTableViewCell {
 
     override func awakeFromNib() {
         super.awakeFromNib()

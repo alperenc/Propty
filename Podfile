@@ -7,5 +7,6 @@ target 'Propty' do
 
   # Pods for Propty
   pod 'Firebase'
+  pod 'SWTableViewCell', '~> 0.3.7'
 
 end
