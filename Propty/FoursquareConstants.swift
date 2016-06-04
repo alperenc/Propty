@@ -63,5 +63,7 @@ extension FoursquareClient {
         // Venues
         static let Venues = "venues"
         
+        // Venue
+        static let VenueId = "id"
     }
 }

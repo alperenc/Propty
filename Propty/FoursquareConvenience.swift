@@ -8,6 +8,7 @@
 
 import Foundation
 import CoreLocation
+import CoreData
 
 extension FoursquareClient {
     
@@ -45,6 +46,19 @@ extension FoursquareClient {
                 completion(success: false, error: NSError(domain: "noVenues", code: 02, userInfo: userInfo))
             } else {
                 for venueDictionary in venuesArray {
+                    if let propertyId = venueDictionary[ResponseKeys.VenueId] {
+                        let fetchRequest = NSFetchRequest(entityName: "Property")
+                        fetchRequest.predicate = NSPredicate(format: "id == %@", argumentArray: [propertyId])
+                        
+                        do {
+                            let fetchedProperties = try CoreDataStackManager.sharedInstance().managedObjectContext.executeFetchRequest(fetchRequest)
+                            if fetchedProperties.count > 0 {
+                                continue
+                            }
+                        } catch {}
+                        
+                    }
+                    
                     let _ = Property(dictionary: venueDictionary, context: CoreDataStackManager.sharedInstance().managedObjectContext)
                 }
                 

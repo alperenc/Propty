@@ -33,6 +33,7 @@ class PropertyListViewController: UITableViewController, NSFetchedResultsControl
         
         refreshControl?.addTarget(self, action: #selector(PropertyListViewController.refresh), forControlEvents: .ValueChanged)
         
+        locationManager.distanceFilter = 500
         locationManager.delegate = self
         
         do {
@@ -92,7 +93,7 @@ class PropertyListViewController: UITableViewController, NSFetchedResultsControl
         // Begin: Parts of this code snippet is taken from NSHipster
         switch CLLocationManager.authorizationStatus() {
         case .AuthorizedAlways, .AuthorizedWhenInUse:
-            locationManager.requestLocation() // startUpdatingLocation()
+            locationManager.startUpdatingLocation()
             
         case .NotDetermined:
             let alertController = UIAlertController(
@@ -123,16 +124,24 @@ class PropertyListViewController: UITableViewController, NSFetchedResultsControl
         fetchLocation()
     }
     
-    func leftUtilityButtons() -> [AnyObject] {
+    func leftUtilityButtons(indexPath: NSIndexPath) -> [AnyObject] {
         let leftUtilityButtons = NSMutableArray()
-        leftUtilityButtons.sw_addUtilityButtonWithColor(UIColor.blueColor(), title: "Save")
+        
+        if fetchedResultsController.sections?.count > 1 {
+            if indexPath.section == 0 {
+                leftUtilityButtons.sw_addUtilityButtonWithColor(UIColor.grayColor(), title: "Remove")
+            } else {
+                leftUtilityButtons.sw_addUtilityButtonWithColor(UIColor.blueColor(), title: "Save")
+            }
+        } else {
+            leftUtilityButtons.sw_addUtilityButtonWithColor(UIColor.blueColor(), title: "Save")
+        }
         
         return leftUtilityButtons as [AnyObject]
     }
     
-    func saveProperty(property: Property) {
-        property.saved = true
-        tableView.reloadData()
+    func toggleSavedAttributeForProperty(property: Property) {
+        property.saved = !property.saved
     }
 
     // MARK: - Table View Data Source
@@ -148,7 +157,7 @@ class PropertyListViewController: UITableViewController, NSFetchedResultsControl
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("propertyCell", forIndexPath: indexPath) as! PropertyTableViewCell
-        cell.leftUtilityButtons = leftUtilityButtons()
+        cell.leftUtilityButtons = leftUtilityButtons(indexPath)
         cell.delegate = self
         
         let property = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Property
@@ -269,20 +278,16 @@ class PropertyListViewController: UITableViewController, NSFetchedResultsControl
     }
     
     func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let currentLocation = locations.last else {
+        
+        guard let currentLocation = manager.location else {
             return
         }
         
-        print(-currentLocation.timestamp.timeIntervalSinceNow)
-        
-        if (-currentLocation.timestamp.timeIntervalSinceNow) < 120 {
-            locationManager.stopUpdatingLocation()
-            refreshControl?.endRefreshing()
-            return
-        }
-        
-        locationManager.stopUpdatingLocation()
         refreshControl?.endRefreshing()
+        
+        if abs(currentLocation.timestamp.timeIntervalSinceNow) > 120 {
+            return
+        }
         
         for property in fetchedResultsController.fetchedObjects as! [Property] {
             if !property.saved {
@@ -315,7 +320,7 @@ class PropertyListViewController: UITableViewController, NSFetchedResultsControl
         case 0:
             let indexPath = tableView.indexPathForCell(cell)!
             let property = fetchedResultsController.objectAtIndexPath(indexPath) as! Property
-            saveProperty(property)
+            toggleSavedAttributeForProperty(property)
         default:
             break
         }
