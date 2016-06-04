@@ -30,6 +30,9 @@ class PropertyListViewController: UITableViewController, NSFetchedResultsControl
             self.detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? PropertyDetailViewController
         }
         
+        refreshControl?.addTarget(self, action: #selector(PropertyListViewController.refresh), forControlEvents: .ValueChanged)
+        
+        locationManager.distanceFilter = 100
         locationManager.delegate = self
         
         do {
@@ -48,33 +51,7 @@ class PropertyListViewController: UITableViewController, NSFetchedResultsControl
     }
     
     override func viewDidAppear(animated: Bool) {
-        // Begin: Parts of this code snippet is taken from NSHipster
-        switch CLLocationManager.authorizationStatus() {
-        case .AuthorizedAlways, .AuthorizedWhenInUse:
-            locationManager.startUpdatingLocation() //requestLocation()
-            
-        case .NotDetermined:
-            let alertController = UIAlertController(
-                title: "Enable Location Access",
-                message: "In order to show properties near you, Propty needs access to your device location.",
-                preferredStyle: .Alert)
-            
-            let denyAction = UIAlertAction(title: "Deny", style: .Cancel) { (action) in
-                self.showLocationDisabledAlert()
-            }
-            alertController.addAction(denyAction)
-            
-            let allowAction = UIAlertAction(title: "Allow", style: .Default) { (action) in
-                self.locationManager.requestWhenInUseAuthorization()
-            }
-            alertController.addAction(allowAction)
-            
-            self.presentViewController(alertController, animated: true, completion: nil)
-            
-        case .Restricted, .Denied:
-            showLocationDisabledAlert()
-        }
-        // End: Parts of this code snippet is taken from NSHipster
+        fetchLocation()
     }
 
     // MARK: - Segues
@@ -109,6 +86,40 @@ class PropertyListViewController: UITableViewController, NSFetchedResultsControl
         
         self.presentViewController(alertController, animated: true, completion: nil)
 
+    }
+    
+    func fetchLocation() {
+        // Begin: Parts of this code snippet is taken from NSHipster
+        switch CLLocationManager.authorizationStatus() {
+        case .AuthorizedAlways, .AuthorizedWhenInUse:
+            locationManager.requestLocation() // startUpdatingLocation()
+            
+        case .NotDetermined:
+            let alertController = UIAlertController(
+                title: "Enable Location Access",
+                message: "In order to show properties near you, Propty needs access to your device location.",
+                preferredStyle: .Alert)
+            
+            let denyAction = UIAlertAction(title: "Deny", style: .Cancel) { (action) in
+                self.showLocationDisabledAlert()
+            }
+            alertController.addAction(denyAction)
+            
+            let allowAction = UIAlertAction(title: "Allow", style: .Default) { (action) in
+                self.locationManager.requestWhenInUseAuthorization()
+            }
+            alertController.addAction(allowAction)
+            
+            self.presentViewController(alertController, animated: true, completion: nil)
+            
+        case .Restricted, .Denied:
+            showLocationDisabledAlert()
+        }
+        // End: Parts of this code snippet is taken from NSHipster
+    }
+    
+    func refresh() {
+        fetchLocation()
     }
 
     // MARK: - Table View
@@ -232,12 +243,32 @@ class PropertyListViewController: UITableViewController, NSFetchedResultsControl
             return
         }
         
+        refreshControl?.endRefreshing()
         locationManager.stopUpdatingLocation()
+        
+        for property in fetchedResultsController.fetchedObjects as! [Property] {
+            if !property.saved {
+                sharedContext.deleteObject(property)
+            }
+        }
         
         FoursquareClient.sharedInstance().getVenuesForLocation(currentLocation) { (success, error) in
             if success {
             }
         }
+    }
+    
+    func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
+        let alertController = UIAlertController(
+            title: "Updating Location Failed",
+            message: error.localizedDescription,
+            preferredStyle: .Alert)
+        
+        let dismissAction = UIAlertAction(title: "Dismiss", style: .Cancel, handler: nil)
+        
+        alertController.addAction(dismissAction)
+        
+        self.presentViewController(alertController, animated: true, completion: nil)
     }
 
 }
