@@ -60,9 +60,9 @@ class PropertyListViewController: UITableViewController, NSFetchedResultsControl
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "showDetail" {
             if let indexPath = self.tableView.indexPathForSelectedRow {
-            let object = self.fetchedResultsController.objectAtIndexPath(indexPath)
+            let property = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Property
                 let controller = (segue.destinationViewController as! UINavigationController).topViewController as! PropertyDetailViewController
-                controller.detailItem = object
+                controller.detailItem = property
                 controller.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem()
                 controller.navigationItem.leftItemsSupplementBackButton = true
             }
@@ -126,15 +126,16 @@ class PropertyListViewController: UITableViewController, NSFetchedResultsControl
     
     func leftUtilityButtons(indexPath: NSIndexPath) -> [AnyObject] {
         let leftUtilityButtons = NSMutableArray()
-        
+        let saveColor = UIColor(red:119.0/255.0, green: 170.0/255.0, blue: 173.0/255.0, alpha: 1.0)
         if fetchedResultsController.sections?.count > 1 {
             if indexPath.section == 0 {
                 leftUtilityButtons.sw_addUtilityButtonWithColor(UIColor.grayColor(), title: "Remove")
             } else {
-                leftUtilityButtons.sw_addUtilityButtonWithColor(UIColor.blueColor(), title: "Save")
+                
+                leftUtilityButtons.sw_addUtilityButtonWithColor(saveColor, title: "Save")
             }
         } else {
-            leftUtilityButtons.sw_addUtilityButtonWithColor(UIColor.blueColor(), title: "Save")
+            leftUtilityButtons.sw_addUtilityButtonWithColor(saveColor, title: "Save")
         }
         
         return leftUtilityButtons as [AnyObject]
@@ -185,6 +186,10 @@ class PropertyListViewController: UITableViewController, NSFetchedResultsControl
     }
     
     // MARK: - Table View Delegate
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        performSegueWithIdentifier("showDetail", sender: self)
+    }
+    
     override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if fetchedResultsController.sections?.count > 1 {
             if section == 0 {
@@ -302,6 +307,8 @@ class PropertyListViewController: UITableViewController, NSFetchedResultsControl
     }
     
     func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
+        refreshControl?.endRefreshing()
+        
         let alertController = UIAlertController(
             title: "Updating Location Failed",
             message: error.localizedDescription,

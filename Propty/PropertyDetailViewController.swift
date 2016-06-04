@@ -13,7 +13,7 @@ class PropertyDetailViewController: UIViewController {
     @IBOutlet weak var detailDescriptionLabel: UILabel!
 
 
-    var detailItem: AnyObject? {
+    var detailItem: Property? {
         didSet {
             // Update the view.
             self.configureView()
@@ -23,8 +23,9 @@ class PropertyDetailViewController: UIViewController {
     func configureView() {
         // Update the user interface for the detail item.
         if let detail = self.detailItem {
+            self.title = detail.name
             if let label = self.detailDescriptionLabel {
-                label.text = detail.valueForKey("timeStamp")!.description
+                label.text = "\(detail.address), \(detail.city)"
             }
         }
     }
