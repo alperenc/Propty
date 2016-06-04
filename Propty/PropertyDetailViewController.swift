@@ -25,7 +25,12 @@ class PropertyDetailViewController: UIViewController {
         if let detail = self.detailItem {
             self.title = detail.name
             if let label = self.detailDescriptionLabel {
-                label.text = "\(detail.address), \(detail.city)"
+                if let address = detail.address, let city = detail.city {
+                    label.text = "\(detail.name), ` \(address), \(city)"
+                } else {
+                    label.text = detail.name
+                }
+                
             }
         }
     }
