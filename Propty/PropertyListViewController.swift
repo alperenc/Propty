@@ -24,11 +24,11 @@ class PropertyListViewController: UIViewController, UITableViewDelegate, UITable
     let refreshControl = UIRefreshControl()
     let locationManager = CLLocationManager()
     
-    var lastUpdatedLocation: CLLocation?
-    
     let saveColor = UIColor(red:119.0/255.0, green: 170.0/255.0, blue: 173.0/255.0, alpha: 1.0)
     
+    var lastUpdatedLocation: CLLocation?
     var locationUpdateFailCount = 0
+    var editingMode: Bool = false
     
     // MARK: - Life Cycle
 
@@ -201,10 +201,11 @@ class PropertyListViewController: UIViewController, UITableViewDelegate, UITable
         
     }
     
-//    func removeProperty(property: Property) {
-//        sharedContext.deleteObject(property)
-//        CoreDataStackManager.sharedInstance().saveContext()
-//    }
+    // MARK: - View Controller
+    override func setEditing(editing: Bool, animated: Bool) {
+        editingMode = editing
+        super.setEditing(editing, animated: animated)
+    }
 
     // MARK: - Table View Data Source
 
@@ -290,10 +291,21 @@ class PropertyListViewController: UIViewController, UITableViewDelegate, UITable
             view?.pinTintColor = UIColor.redColor()
         }
         
-//        let removePropertyGesture = UILongPressGestureRecognizer(target: self, action: #selector(PropertyListViewController.removeProperty(_:)))
-//        view?.addGestureRecognizer(removePropertyGesture)
-        
         return view
+    }
+    
+    func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView) {
+        mapView.deselectAnnotation(view.annotation, animated: true)
+        
+        guard let property = view.annotation as? Property else {
+            print("Selected annotation is not a Property!")
+            return
+        }
+        
+        if editingMode {
+            sharedContext.deleteObject(property)
+            CoreDataStackManager.sharedInstance().saveContext()
+        }
     }
     
     func mapView(mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
