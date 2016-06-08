@@ -22,14 +22,9 @@ class PropertyDetailViewController: UIViewController {
 
     func configureView() {
         // Update the user interface for the detail item.
-        self.title = detailItem.name
+        self.title = detailItem.title
         if let label = self.detailDescriptionLabel {
-            if let address = detailItem.address, let city = detailItem.city {
-                label.text = "\(detailItem.name), ` \(address), \(city)"
-            } else {
-                label.text = detailItem.name
-            }
-            
+            label.text = detailItem.subtitle
         }
         
         if detailItem.saved {
@@ -40,12 +35,15 @@ class PropertyDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        self.configureView()
+        if detailItem != nil {
+            self.configureView()
+        }
+        
     }
 
     @IBAction func toggleSavedAttributeForProperty(sender: UIBarButtonItem) {
         
-        detailItem.saved = !detailItem.saved
+        detailItem?.saved = !detailItem.saved
         CoreDataStackManager.sharedInstance().saveContext()
         
         saveToggleBarButtonItem.title = detailItem.saved ? "Remove" : "Save"
