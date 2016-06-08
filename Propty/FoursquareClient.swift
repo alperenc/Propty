@@ -35,6 +35,7 @@ class FoursquareClient: NSObject {
     
     // MARK: GET Venues
     func taskForGETMethod(method: String, parameters: [String: AnyObject], completion:(result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionTask {
+        
         // Set the parameters
         var mutableParameters = parameters
         
@@ -60,6 +61,9 @@ class FoursquareClient: NSObject {
     func makeRequest(request: NSURLRequest, completion: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
         
         let task = session.dataTaskWithRequest(request) { (data, response, error) in
+            // Hide network indicator
+            UIApplication.sharedApplication().networkActivityIndicatorVisible = false
+            
             // Was there an error with the request?
             guard error == nil else {
                 print("There was an error with your request: \(error)")
@@ -98,6 +102,9 @@ class FoursquareClient: NSObject {
         
         // Start the request
         task.resume()
+        
+        // Show network indicator
+        UIApplication.sharedApplication().networkActivityIndicatorVisible = true
         
         return task
         

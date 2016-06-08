@@ -11,9 +11,9 @@ import UIKit
 class PropertyDetailViewController: UIViewController {
 
     @IBOutlet weak var detailDescriptionLabel: UILabel!
-
-
-    var detailItem: Property? {
+    @IBOutlet weak var saveToggleBarButtonItem: UIBarButtonItem!
+    
+    var detailItem: Property! {
         didSet {
             // Update the view.
             self.configureView()
@@ -22,16 +22,18 @@ class PropertyDetailViewController: UIViewController {
 
     func configureView() {
         // Update the user interface for the detail item.
-        if let detail = self.detailItem {
-            self.title = detail.name
-            if let label = self.detailDescriptionLabel {
-                if let address = detail.address, let city = detail.city {
-                    label.text = "\(detail.name), ` \(address), \(city)"
-                } else {
-                    label.text = detail.name
-                }
-                
+        self.title = detailItem.name
+        if let label = self.detailDescriptionLabel {
+            if let address = detailItem.address, let city = detailItem.city {
+                label.text = "\(detailItem.name), ` \(address), \(city)"
+            } else {
+                label.text = detailItem.name
             }
+            
+        }
+        
+        if detailItem.saved {
+            saveToggleBarButtonItem.title = "Remove"
         }
     }
 
@@ -41,6 +43,13 @@ class PropertyDetailViewController: UIViewController {
         self.configureView()
     }
 
+    @IBAction func toggleSavedAttributeForProperty(sender: UIBarButtonItem) {
+        
+        detailItem.saved = !detailItem.saved
+        CoreDataStackManager.sharedInstance().saveContext()
+        
+        saveToggleBarButtonItem.title = detailItem.saved ? "Remove" : "Save"
+    }
 
 }
 

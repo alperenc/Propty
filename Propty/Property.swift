@@ -8,9 +8,9 @@
 
 import Foundation
 import CoreData
+import MapKit
 
-
-class Property: NSManagedObject {
+class Property: NSManagedObject, MKAnnotation {
     
     struct Keys {
         static let ID = "id"
@@ -47,11 +47,28 @@ class Property: NSManagedObject {
             return
         }
         
-        latitude = location[Keys.Lat] as? NSNumber
-        longitude = location[Keys.Long] as? NSNumber
+        latitude = location[Keys.Lat] as! Double
+        longitude = location[Keys.Long] as! Double
         distance = location[Keys.Distance] as? NSNumber
         address = location[Keys.Address] as? String
         city = location[Keys.City] as? String
+    }
+    
+    var title: String? {
+        return name
+    }
+    
+    var subtitle: String? {
+        if let address = self.address, let city = self.city {
+            return "\(address), \(city)"
+        } else {
+            return  "\(latitude), \(longitude)"
+        }
+        
+    }
+    
+    var coordinate: CLLocationCoordinate2D {
+        return CLLocationCoordinate2DMake(latitude, longitude)
     }
 
 }

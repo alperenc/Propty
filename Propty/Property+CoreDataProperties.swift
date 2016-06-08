@@ -18,8 +18,8 @@ extension Property {
     @NSManaged var city: String?
     @NSManaged var distance: NSNumber?
     @NSManaged var id: String
-    @NSManaged var latitude: NSNumber?
-    @NSManaged var longitude: NSNumber?
+    @NSManaged var latitude: Double
+    @NSManaged var longitude: Double
     @NSManaged var name: String
     @NSManaged var saved: Bool
     @NSManaged var tips: [Tip]?

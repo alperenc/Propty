@@ -7,23 +7,35 @@
 //
 
 import UIKit
+import MapKit
 import CoreData
 import CoreLocation
 import SWTableViewCell
 
-class PropertyListViewController: UITableViewController, NSFetchedResultsControllerDelegate, CLLocationManagerDelegate, SWTableViewCellDelegate {
+class PropertyListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, MKMapViewDelegate, NSFetchedResultsControllerDelegate {
     
     // MARK: - Properties
 
     var detailViewController: PropertyDetailViewController? = nil
     
+    @IBOutlet weak var mapView: MKMapView!
+    @IBOutlet weak var tableView: UITableView!
+    
+    let refreshControl = UIRefreshControl()
     let locationManager = CLLocationManager()
+    
+    var lastUpdatedLocation: CLLocation?
+    
+    let saveColor = UIColor(red:119.0/255.0, green: 170.0/255.0, blue: 173.0/255.0, alpha: 1.0)
+    
+    var locationUpdateFailCount = 0
     
     // MARK: - Life Cycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        
+        // Add edit button
         self.navigationItem.leftBarButtonItem = self.editButtonItem()
         
         if let split = self.splitViewController {
@@ -31,9 +43,11 @@ class PropertyListViewController: UITableViewController, NSFetchedResultsControl
             self.detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? PropertyDetailViewController
         }
         
-        refreshControl?.addTarget(self, action: #selector(PropertyListViewController.refresh), forControlEvents: .ValueChanged)
+        // Add refreshing capability
+        refreshControl.addTarget(self, action: #selector(PropertyListViewController.refresh), forControlEvents: .ValueChanged)
+        tableView.addSubview(refreshControl)
         
-        locationManager.distanceFilter = 500
+        locationManager.distanceFilter = 50
         locationManager.delegate = self
         
         do {
@@ -44,32 +58,59 @@ class PropertyListViewController: UITableViewController, NSFetchedResultsControl
             //print("Unresolved error \(error), \(error.userInfo)")
             abort()
         }
+        
     }
 
     override func viewWillAppear(animated: Bool) {
-        self.clearsSelectionOnViewWillAppear = self.splitViewController!.collapsed
+        tableView.remembersLastFocusedIndexPath = self.splitViewController!.collapsed
         super.viewWillAppear(animated)
     }
     
     override func viewDidAppear(animated: Bool) {
-        fetchLocation()
+        
+        if (lastUpdatedLocation?.coordinate.latitude != locationManager.location?.coordinate.latitude
+            && lastUpdatedLocation?.coordinate.longitude != locationManager.location?.coordinate.longitude)
+            || locationManager.location == nil {
+            fetchLocation()
+        }
+        configureAnnotations()
+        
     }
 
     // MARK: - Segues
-
+    
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "showDetail" {
-            if let indexPath = self.tableView.indexPathForSelectedRow {
-            let property = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Property
-                let controller = (segue.destinationViewController as! UINavigationController).topViewController as! PropertyDetailViewController
-                controller.detailItem = property
-                controller.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem()
-                controller.navigationItem.leftItemsSupplementBackButton = true
+            let controller = (segue.destinationViewController as! UINavigationController).topViewController as! PropertyDetailViewController
+            
+            if let sender = sender as? UITableView {
+                if let indexPath = sender.indexPathForSelectedRow {
+                    let property = fetchedResultsController.objectAtIndexPath(indexPath) as! Property
+                    controller.detailItem = property
+                }
+            } else if let sender = sender as? MKAnnotationView {
+                if let property = sender.annotation as? Property {
+                    controller.detailItem = property
+                }
             }
+            controller.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem()
+            controller.navigationItem.leftItemsSupplementBackButton = true
         }
     }
-    
+
     // MARK: - Actions and Helpers
+    
+    @IBAction func switchViews(sender: UISegmentedControl) {
+        
+        if sender.selectedSegmentIndex == 1 {
+            mapView.hidden = true
+        } else {
+            configureAnnotations()
+            mapView.hidden = false
+        }
+        
+    }
+    
     func showLocationDisabledAlert() {
         let alertController = UIAlertController(
             title: "Location Access Disabled",
@@ -122,11 +163,13 @@ class PropertyListViewController: UITableViewController, NSFetchedResultsControl
     
     func refresh() {
         fetchLocation()
+        
+        refreshControl.endRefreshing()
     }
     
     func leftUtilityButtons(indexPath: NSIndexPath) -> [AnyObject] {
         let leftUtilityButtons = NSMutableArray()
-        let saveColor = UIColor(red:119.0/255.0, green: 170.0/255.0, blue: 173.0/255.0, alpha: 1.0)
+        
         if fetchedResultsController.sections?.count > 1 {
             if indexPath.section == 0 {
                 leftUtilityButtons.sw_addUtilityButtonWithColor(UIColor.grayColor(), title: "Remove")
@@ -143,20 +186,38 @@ class PropertyListViewController: UITableViewController, NSFetchedResultsControl
     
     func toggleSavedAttributeForProperty(property: Property) {
         property.saved = !property.saved
+        mapView.removeAnnotation(property)
+        mapView.addAnnotation(property)
     }
+    
+    func configureAnnotations() {
+        mapView.removeAnnotations(mapView.annotations)
+        
+        if let properties = fetchedResultsController.fetchedObjects as? [Property] {
+            for property in properties {
+                mapView.addAnnotation(property)
+            }
+        }
+        
+    }
+    
+//    func removeProperty(property: Property) {
+//        sharedContext.deleteObject(property)
+//        CoreDataStackManager.sharedInstance().saveContext()
+//    }
 
     // MARK: - Table View Data Source
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return self.fetchedResultsController.sections?.count ?? 0
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let sectionInfo = self.fetchedResultsController.sections![section]
         return sectionInfo.numberOfObjects
     }
 
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("propertyCell", forIndexPath: indexPath) as! PropertyTableViewCell
         cell.leftUtilityButtons = leftUtilityButtons(indexPath)
         cell.delegate = self
@@ -166,12 +227,12 @@ class PropertyListViewController: UITableViewController, NSFetchedResultsControl
         return cell
     }
 
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+    func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
         // Return false if you do not want the specified item to be editable.
         return true
     }
 
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if editingStyle == .Delete {
             let property = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Property
             
@@ -182,15 +243,16 @@ class PropertyListViewController: UITableViewController, NSFetchedResultsControl
     }
 
     func configureCell(cell: PropertyTableViewCell, withProperty property: Property) {
-        cell.textLabel!.text = property.name
+        cell.textLabel?.text = property.title
+        cell.detailTextLabel?.text = property.subtitle
     }
     
     // MARK: - Table View Delegate
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        performSegueWithIdentifier("showDetail", sender: self)
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        performSegueWithIdentifier("showDetail", sender: tableView)
     }
     
-    override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if fetchedResultsController.sections?.count > 1 {
             if section == 0 {
                 return "Saved Properties"
@@ -199,6 +261,44 @@ class PropertyListViewController: UITableViewController, NSFetchedResultsControl
             }
         } else {
             return "Properties provided by foursquare"
+        }
+    }
+    
+    // MARK: - Map View Delegate
+    func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
+        
+        guard let propertyAnnotation = annotation as? Property else {
+            return nil
+        }
+        
+        let reuseId = "propertyAnnotationView"
+        
+        var view = mapView.dequeueReusableAnnotationViewWithIdentifier(reuseId) as? MKPinAnnotationView
+        
+        if view == nil {
+            view = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
+            view?.canShowCallout = true
+            view?.rightCalloutAccessoryView = UIButton(type: .DetailDisclosure)
+            view?.animatesDrop = true
+        } else {
+            view?.annotation = annotation
+        }
+        
+        if propertyAnnotation.saved {
+            view?.pinTintColor = saveColor
+        } else {
+            view?.pinTintColor = UIColor.redColor()
+        }
+        
+//        let removePropertyGesture = UILongPressGestureRecognizer(target: self, action: #selector(PropertyListViewController.removeProperty(_:)))
+//        view?.addGestureRecognizer(removePropertyGesture)
+        
+        return view
+    }
+    
+    func mapView(mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+        if control == view.rightCalloutAccessoryView {
+            performSegueWithIdentifier("showDetail", sender: view)
         }
     }
     
@@ -248,18 +348,29 @@ class PropertyListViewController: UITableViewController, NSFetchedResultsControl
     }
 
     func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
+        
+        guard let property = anObject as? Property else {
+            return
+        }
+        
         switch type {
             case .Insert:
                 tableView.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .Fade)
+                mapView.addAnnotation(property)
+            
             case .Delete:
                 tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
+                mapView.removeAnnotation(property)
+            
             case .Update:
                 let cell = tableView.cellForRowAtIndexPath(indexPath!) as! PropertyTableViewCell
-                self.configureCell(cell, withProperty: anObject as! Property)
+                self.configureCell(cell, withProperty: property)
+                mapView.removeAnnotation(property)
+                mapView.addAnnotation(property)
+            
             case .Move:
                 tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
                 tableView.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .Fade)
-                // tableView.moveRowAtIndexPath(indexPath!, toIndexPath: newIndexPath!)
         }
     }
 
@@ -276,52 +387,106 @@ class PropertyListViewController: UITableViewController, NSFetchedResultsControl
      }
      */
     
-    // MARK: - Core Location
-    
+}
+
+// MARK: - Core Location
+
+extension PropertyListViewController: CLLocationManagerDelegate {
     func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
-        locationManager.startUpdatingLocation()
+        switch status {
+        case .AuthorizedAlways, .AuthorizedWhenInUse:
+            locationManager.startUpdatingLocation()
+        default:
+            break
+        }
     }
     
     func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
-        guard let currentLocation = manager.location else {
+        mapView.showsUserLocation = true
+        
+        guard let updatedLocation = locations.last else {
             return
         }
         
-        refreshControl?.endRefreshing()
+        var deletedPropertyCount = 0
+        if (lastUpdatedLocation?.coordinate.latitude != locations.last?.coordinate.latitude && lastUpdatedLocation?.coordinate.longitude != locations.last?.coordinate.longitude) && lastUpdatedLocation != nil {
+            for property in fetchedResultsController.fetchedObjects as! [Property] {
+                if !property.saved {
+                    sharedContext.deleteObject(property)
+                    deletedPropertyCount += 1
+                }
+            }
+            print("Deleted properties: \(deletedPropertyCount)")
+        }
         
-        if abs(currentLocation.timestamp.timeIntervalSinceNow) > 120 {
+        
+        
+        lastUpdatedLocation = updatedLocation
+        
+        if abs(updatedLocation.timestamp.timeIntervalSinceNow) > 300 {
             return
         }
         
-        for property in fetchedResultsController.fetchedObjects as! [Property] {
-            if !property.saved {
-                sharedContext.deleteObject(property)
+        FoursquareClient.sharedInstance().getVenuesForLocation(updatedLocation) { (success, error) in
+            dispatch_async(dispatch_get_main_queue()) {
+                if error != nil {
+                    let alertController = UIAlertController(
+                        title: "Properties failed to load.",
+                        message: "\(error!.localizedDescription) \n Please try again later.",
+                        preferredStyle: .Alert)
+                    
+                    let dismissAction = UIAlertAction(title: "Dismiss", style: .Cancel, handler: nil)
+                    
+                    alertController.addAction(dismissAction)
+                    
+                    self.presentViewController(alertController, animated: true, completion: nil)
+                }
             }
+            
         }
         
-        FoursquareClient.sharedInstance().getVenuesForLocation(currentLocation) { (success, error) in
-            if success {
-            }
-        }
+        let mapRegion = MKCoordinateRegionMakeWithDistance(updatedLocation.coordinate, 1000, 1000)
+        mapView.setRegion(mapRegion, animated: true)
     }
     
     func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
-        refreshControl?.endRefreshing()
         
-        let alertController = UIAlertController(
-            title: "Updating Location Failed",
-            message: error.localizedDescription,
-            preferredStyle: .Alert)
+        locationUpdateFailCount += 1
         
-        let dismissAction = UIAlertAction(title: "Dismiss", style: .Cancel, handler: nil)
-        
-        alertController.addAction(dismissAction)
-        
-        self.presentViewController(alertController, animated: true, completion: nil)
+        if locationUpdateFailCount > 1 {
+            
+            let alertController = UIAlertController(
+                title: "Updating Location Failed",
+                message: error.localizedDescription,
+                preferredStyle: .Alert)
+            
+            let dismissAction = UIAlertAction(title: "Dismiss", style: .Cancel, handler: nil)
+            
+            alertController.addAction(dismissAction)
+            
+            self.presentViewController(alertController, animated: true) {
+                self.locationUpdateFailCount = 0
+            }
+        }
     }
     
-    // MARK: SWTableViewCellDelegate
+}
+
+// MARK: - UIToolbarDelegate
+
+extension PropertyListViewController: UIToolbarDelegate {
+    
+    func positionForBar(bar: UIBarPositioning) -> UIBarPosition {
+        return .TopAttached
+    }
+    
+}
+
+// MARK: - SWTableViewCellDelegate
+
+extension PropertyListViewController: SWTableViewCellDelegate {
+    
     func swipeableTableViewCell(cell: SWTableViewCell!, didTriggerLeftUtilityButtonWithIndex index: Int) {
         switch index {
         case 0:
@@ -332,6 +497,6 @@ class PropertyListViewController: UITableViewController, NSFetchedResultsControl
             break
         }
     }
-
+    
 }
 

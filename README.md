@@ -2,7 +2,8 @@ Propty is an app for locating nearby properties and saving them for later viewin
 
 Upon first launching the app, the user must allow location services in order to receive nearby properties from Foursquare API.
 
-Swiping right on any cell and choosing "Save" action will save the property for later viewing. When saved, the property can be removed, again with swiping right and choosing the appropriate "Remove" action.
+Swiping right on any cell and choosing "Save" action will save the property for later viewing. 
+When saved, the property can be removed, again with swiping right and choosing the appropriate "Remove" action.
 
 Swiping left on any cell will reveal the expected "Delete" action.
 
