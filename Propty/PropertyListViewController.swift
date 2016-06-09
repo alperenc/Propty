@@ -47,7 +47,7 @@ class PropertyListViewController: UIViewController, UITableViewDelegate, UITable
         refreshControl.addTarget(self, action: #selector(PropertyListViewController.refresh), forControlEvents: .ValueChanged)
         tableView.addSubview(refreshControl)
         
-        locationManager.distanceFilter = 50
+        locationManager.distanceFilter = 500
         locationManager.delegate = self
         
         do {
@@ -73,6 +73,7 @@ class PropertyListViewController: UIViewController, UITableViewDelegate, UITable
             || locationManager.location == nil {
             fetchLocation()
         }
+        
         configureAnnotations()
         
     }
@@ -186,8 +187,8 @@ class PropertyListViewController: UIViewController, UITableViewDelegate, UITable
     
     func toggleSavedAttributeForProperty(property: Property) {
         property.saved = !property.saved
-        mapView.removeAnnotation(property)
-        mapView.addAnnotation(property)
+        CoreDataStackManager.sharedInstance().saveContext()
+        
     }
     
     func configureAnnotations() {
@@ -295,7 +296,6 @@ class PropertyListViewController: UIViewController, UITableViewDelegate, UITable
     }
     
     func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView) {
-        mapView.deselectAnnotation(view.annotation, animated: true)
         
         guard let property = view.annotation as? Property else {
             print("Selected annotation is not a Property!")
@@ -306,6 +306,7 @@ class PropertyListViewController: UIViewController, UITableViewDelegate, UITable
             sharedContext.deleteObject(property)
             CoreDataStackManager.sharedInstance().saveContext()
         }
+        
     }
     
     func mapView(mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
