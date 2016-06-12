@@ -50,7 +50,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     func applicationWillTerminate(application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
         // Saves changes in the application's managed object context before the application terminates.
-        CoreDataStackManager.sharedInstance().saveContext()
+        CoreDataStackManager.sharedInstance.saveContext()
     }
 
     // MARK: - Split view

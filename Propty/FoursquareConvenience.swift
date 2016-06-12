@@ -51,7 +51,7 @@ extension FoursquareClient {
                         fetchRequest.predicate = NSPredicate(format: "id == %@", argumentArray: [propertyId])
                         
                         do {
-                            let fetchedProperties = try CoreDataStackManager.sharedInstance().managedObjectContext.executeFetchRequest(fetchRequest)
+                            let fetchedProperties = try self.sharedContext.executeFetchRequest(fetchRequest)
                             if fetchedProperties.count > 0 {
                                 continue
                             }
@@ -59,14 +59,20 @@ extension FoursquareClient {
                         
                     }
                     
-                    let _ = Property(dictionary: venueDictionary, context: CoreDataStackManager.sharedInstance().managedObjectContext)
+                    let _ = Property(dictionary: venueDictionary, context: self.sharedContext)
                 }
                 
-                CoreDataStackManager.sharedInstance().saveContext()
+                CoreDataStackManager.sharedInstance.saveContext()
                 
                 completion(success: true, error: nil)
             }
             
         }
+    }
+    
+    // MARK: - Core Data Convenience
+    
+    var sharedContext: NSManagedObjectContext {
+        return CoreDataStackManager.sharedInstance.managedObjectContext
     }
 }

@@ -19,13 +19,11 @@ class CoreDataStackManager {
     *  This class variable provides an easy way to get access
     *  to a shared instance of the CoreDataStackManager class.
     */
-    class func sharedInstance() -> CoreDataStackManager {
-        struct Singleton {
-            static let instance = CoreDataStackManager()
-        }
-        
-        return Singleton.instance
-    }
+    static let sharedInstance = CoreDataStackManager()
+    
+    // Initializer
+    
+    private init() {}
     
     // MARK: - Core Data stack
     

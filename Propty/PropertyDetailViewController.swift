@@ -44,7 +44,7 @@ class PropertyDetailViewController: UIViewController {
     @IBAction func toggleSavedAttributeForProperty(sender: UIBarButtonItem) {
         
         detailItem?.saved = !detailItem.saved
-        CoreDataStackManager.sharedInstance().saveContext()
+        CoreDataStackManager.sharedInstance.saveContext()
         
         saveToggleBarButtonItem.title = detailItem.saved ? "Remove" : "Save"
     }

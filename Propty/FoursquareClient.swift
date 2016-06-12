@@ -10,6 +10,10 @@ import UIKit
 
 class FoursquareClient: NSObject {
     
+    
+    // MARK: Shared instance
+    static let sharedInstance = FoursquareClient()
+    
     // MARK: Properties
     
     // Shared session
@@ -17,20 +21,9 @@ class FoursquareClient: NSObject {
     
     // MARK: Initializers
     
-    override init() {
+    private override init() {
         session = NSURLSession.sharedSession()
         super.init()
-    }
-    
-    // MARK: - Shared Instance
-    
-    class func sharedInstance() -> FoursquareClient {
-        
-        struct Singleton {
-            static var sharedInstance = FoursquareClient()
-        }
-        
-        return Singleton.sharedInstance
     }
     
     // MARK: GET Venues

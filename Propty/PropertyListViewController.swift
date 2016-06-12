@@ -187,7 +187,7 @@ class PropertyListViewController: UIViewController, UITableViewDelegate, UITable
     
     func toggleSavedAttributeForProperty(property: Property) {
         property.saved = !property.saved
-        CoreDataStackManager.sharedInstance().saveContext()
+        CoreDataStackManager.sharedInstance.saveContext()
         
     }
     
@@ -240,7 +240,7 @@ class PropertyListViewController: UIViewController, UITableViewDelegate, UITable
             
             sharedContext.deleteObject(property)
             
-            CoreDataStackManager.sharedInstance().saveContext()
+            CoreDataStackManager.sharedInstance.saveContext()
         }
     }
 
@@ -304,7 +304,7 @@ class PropertyListViewController: UIViewController, UITableViewDelegate, UITable
         
         if editingMode {
             sharedContext.deleteObject(property)
-            CoreDataStackManager.sharedInstance().saveContext()
+            CoreDataStackManager.sharedInstance.saveContext()
         }
         
     }
@@ -318,7 +318,7 @@ class PropertyListViewController: UIViewController, UITableViewDelegate, UITable
     // MARK: - Core Data Convenience
     
     var sharedContext: NSManagedObjectContext {
-        return CoreDataStackManager.sharedInstance().managedObjectContext
+        return CoreDataStackManager.sharedInstance.managedObjectContext
     }
 
     // MARK: - Fetched Results Controller
@@ -441,7 +441,7 @@ extension PropertyListViewController: CLLocationManagerDelegate {
             return
         }
         
-        FoursquareClient.sharedInstance().getVenuesForLocation(updatedLocation) { (success, error) in
+        FoursquareClient.sharedInstance.getVenuesForLocation(updatedLocation) { (success, error) in
             dispatch_async(dispatch_get_main_queue()) {
                 if error != nil {
                     let alertController = UIAlertController(
